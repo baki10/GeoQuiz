@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,7 +15,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button trueButton;
     private Button falseButton;
-    private Button nextButton;
+    private ImageButton nextImageButton;
+    private ImageButton prevImageButton;
     private TextView questionTextView;
 
     private TrueFalse[] questions = new TrueFalse[]{
@@ -34,32 +36,52 @@ public class QuizActivity extends AppCompatActivity {
 
         trueButton = (Button) findViewById(R.id.true_button);
         falseButton = (Button) findViewById(R.id.false_button);
-        nextButton = (Button) findViewById(R.id.next_button);
+        nextImageButton = (ImageButton) findViewById(R.id.next_button);
+        prevImageButton = (ImageButton) findViewById(R.id.prev_button);
         questionTextView = (TextView) findViewById(R.id.question_text_view);
 
         updateQuestion();
 
+        setListeners();
+    }
+
+    private void setListeners() {
         trueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkAnswer(true);
             }
         });
-
         falseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkAnswer(false);
             }
         });
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        questionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentIndex = (currentIndex + 1) % questions.length;
+                incrementQuestion();
+            }
+        });
+        nextImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                incrementQuestion();
+            }
+        });
+        prevImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentIndex = (currentIndex - 1) < 0 ? questions.length - 1 : currentIndex - 1;
                 updateQuestion();
             }
         });
+    }
+
+    private void incrementQuestion() {
+        currentIndex = (currentIndex + 1) % questions.length;
+        updateQuestion();
     }
 
     private void checkAnswer(boolean pressedTrue) {
