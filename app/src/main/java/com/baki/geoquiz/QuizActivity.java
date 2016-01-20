@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,6 +21,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton nextImageButton;
     private ImageButton prevImageButton;
     private TextView questionTextView;
+    private Button cheatButton;
 
     private TrueFalse[] questions = new TrueFalse[]{
             new TrueFalse(R.string.question_americas, true),
@@ -47,6 +47,7 @@ public class QuizActivity extends AppCompatActivity {
         nextImageButton = (ImageButton) findViewById(R.id.next_button);
         prevImageButton = (ImageButton) findViewById(R.id.prev_button);
         questionTextView = (TextView) findViewById(R.id.question_text_view);
+        cheatButton = (Button) findViewById(R.id.cheat_button);
 
         updateQuestion();
 
@@ -54,37 +55,19 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        trueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer(true);
-            }
+        trueButton.setOnClickListener(v -> checkAnswer(true));
+        falseButton.setOnClickListener(v -> checkAnswer(false));
+        questionTextView.setOnClickListener(v -> incrementQuestion());
+        nextImageButton.setOnClickListener(v -> incrementQuestion());
+        prevImageButton.setOnClickListener(v -> {
+            currentIndex = (currentIndex - 1) < 0 ? questions.length - 1 : currentIndex - 1;
+            updateQuestion();
         });
-        falseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer(false);
-            }
-        });
-        questionTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                incrementQuestion();
-            }
-        });
-        nextImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                incrementQuestion();
-            }
-        });
-        prevImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = (currentIndex - 1) < 0 ? questions.length - 1 : currentIndex - 1;
-                updateQuestion();
-            }
-        });
+        cheatButton.setOnClickListener(v -> startCheatActivity());
+    }
+
+    private void startCheatActivity() {
+
     }
 
     private void incrementQuestion() {
