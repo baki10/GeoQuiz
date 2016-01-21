@@ -47,6 +47,7 @@ public class QuizActivity extends AppCompatActivity {
     Log.d(TAG, "pressed onCreate");
     setContentView(R.layout.activity_quiz);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar.setSubtitle("Bodies of Water");
     setSupportActionBar(toolbar);
 
     trueButton = (Button) findViewById(R.id.true_button);
