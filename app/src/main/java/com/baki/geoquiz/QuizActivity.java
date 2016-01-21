@@ -17,7 +17,7 @@ public class QuizActivity extends AppCompatActivity {
 
   private static final String TAG = "QuizActivity";
   private static final String KEY_INDEX = "index";
-  private static final String KEY_IS_CHEATER = "isCheater";
+  private static final String KEY_IS_CHEATER = "isCheaterArray";
 
   private Button trueButton;
   private Button falseButton;
@@ -33,14 +33,16 @@ public class QuizActivity extends AppCompatActivity {
       new TrueFalse(R.string.question_oceans, true)
   };
   private int currentIndex;
-  private boolean isCheater;
+  private boolean[] isCheaterArray;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (savedInstanceState != null) {
       currentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-      isCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER, false);
+      isCheaterArray = savedInstanceState.getBooleanArray(KEY_IS_CHEATER);
+    }else {
+      isCheaterArray = new boolean[questions.length];
     }
     Log.d(TAG, "pressed onCreate");
     setContentView(R.layout.activity_quiz);
@@ -107,20 +109,18 @@ public class QuizActivity extends AppCompatActivity {
 
   private void incrementQuestion() {
     currentIndex = (currentIndex + 1) % questions.length;
-    isCheater = false;
     updateQuestion();
   }
 
   private void decrementQuestion() {
     currentIndex = (currentIndex - 1) < 0 ? questions.length - 1 : currentIndex - 1;
-    isCheater = false;
     updateQuestion();
   }
 
   private void checkAnswer(boolean pressedTrue) {
     boolean answerIsTrue = questions[currentIndex].isTrueQuestion();
     int messageResId = 0;
-    if (isCheater) {
+    if (isCheaterArray[currentIndex]) {
       messageResId = R.string.judgment_toast;
     } else {
       messageResId = (pressedTrue == answerIsTrue) ?
@@ -145,7 +145,7 @@ public class QuizActivity extends AppCompatActivity {
     super.onSaveInstanceState(outState);
     Log.d(TAG, "pressed onSaveInstanceState");
     outState.putInt(KEY_INDEX, currentIndex);
-    outState.putBoolean(KEY_IS_CHEATER, isCheater);
+    outState.putBooleanArray(KEY_IS_CHEATER, isCheaterArray);
   }
 
   @Override
@@ -153,7 +153,7 @@ public class QuizActivity extends AppCompatActivity {
     if (data == null) {
       return;
     }
-    isCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+    isCheaterArray[currentIndex] = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
   }
 
   @Override
