@@ -1,6 +1,7 @@
 package com.baki.geoquiz;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ public class CheatActivity extends AppCompatActivity {
   private boolean answerIsTrue;
   private TextView answerTextView;
   private Button showAnswerButton;
+  private TextView apiLevelTextView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class CheatActivity extends AppCompatActivity {
     setContentView(R.layout.activity_cheat);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
+    apiLevelTextView = (TextView) findViewById(R.id.apiLevelTextView);
+    int sdkInt = Build.VERSION.SDK_INT;
+    apiLevelTextView.setText("API Level: "+sdkInt);
 
     setAnswerShownResult(false);
 
